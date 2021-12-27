@@ -8,15 +8,17 @@ The course teaches how to build a fully functioning REST API using:
 - Docker / Docker-Compose
 - HTML / JS / CSS
 
-##Django Rest APi
+## Django Rest APi
+
 [Documentation](https://www.django-rest-framework.org/)
 
-##Docker
+## Docker
+
 [Read more](https://www.docker.com/)
 
 Install docker
 [Windows](https://docs.docker.com/desktop/windows/install/)
-[Mac](https://docs.docker.com/desktop/mac/install/)
+[Mac](https://docs.docker.com/desktop/mac/install/)<br />
 Linux:
 
 ```
