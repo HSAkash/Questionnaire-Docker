@@ -1,0 +1,78 @@
+{% extends 'user/base.html' %}
+{% load static %}
+{% block title %}
+  <title>Form</title>
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock title %}
+
+{% block content %}
+<section>
+  <div class="color"></div>
+  <div class="color"></div>
+  <div class="color"></div>
+  <div class="box">
+    <div class="square" style="--i:0"></div>
+    <div class="square" style="--i:1"></div>
+    <div class="square" style="--i:2"></div>
+    <div class="square" style="--i:3"></div>
+    <div class="square" style="--i:4"></div>
+    <div class="container">
+      <div class="form">
+        <h2>Login form</h2>
+        <form id='idForm' method="post" action="{% url 'login'%}">
+          {% csrf_token %}
+            <div class="inputBox">
+              <input type="email" name='email' placeholder='Email'>
+            </div>
+            <div class="inputBox">
+              <input type="password" name="password" placeholder='Password'>
+            </div>
+            <div class="inputBox">
+              <input type="submit" value='Login'>
+            </div>
+            <p class='forget'>Forgot Password ? <a href="{% url 'reset_password' %}">Click</a> </p>
+            <p class='forget'>Don't have an account ? <a href="{% url 'signup' %}">Sing up</a> </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<script>
+  function setCookie(name, value, days) {
+      var expires = "";
+      if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + days);
+        expires = "; expires=" + date.toUTCString();
+      }
+      document.cookie = name + "=" + (value || "") + expires + "; path=/";
+    }
+  $("#idForm").submit(function(e) {
+  
+  
+      var form = $(this);
+      var url = form.attr('action');
+  
+      $.ajax({
+             type: "POST",
+             url: "{% url 'api_user:login' %}",
+             data: form.serialize(), // serializes the form's elements.
+             success: function(data)
+             {
+               setCookie('userinfo', `Bearer ${data.token}`, data.exp);
+              location.replace("{% url 'post:postlist' %}");
+             },
+              error: function(data)
+              {
+                  location.reload();
+                  alert(`Password or username is incorrect\n`);
+              }
+           });
+           
+
+      e.preventDefault(); // avoid to execute the actual submit of the form.
+  });
+  </script>
+{% endblock content %}

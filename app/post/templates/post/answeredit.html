@@ -1,0 +1,90 @@
+{% extends 'post/base.html' %}
+{% load static %}
+{% block title %}
+  <title>{{title}}</title>
+{% endblock title %}
+
+{% block content %}
+  
+    <style>
+        .editable{
+        padding: 10px;
+        width: 100%;
+        border-radius: 30px;
+        outline: none;
+        margin-bottom: 20px;
+        }
+    </style>
+  <div class="content">
+    <!-- <h2>admin</h2> -->
+      <form id="idForm" name='formedit' method="post", action="{% url 'api_post:answer-detail' pk_q pk_a %}">
+        
+        <!-- <div class="content"> -->
+            <p>Title : {{title_q}}</p>
+            <p>Text :</p>
+            <div class="search-box">
+              <textarea style="min-height:200px;" id="id_text" class="editable medium-editor-textarea medium-editor-element" name="description" cols="40" rows="10" required >
+                <code id='valure_replase'>hemel</code>
+            </textarea>
+            </div>
+        <!-- </div> -->
+        <input class="a-btn" type="submit" value="Submit">
+
+      </form>
+  </div>
+    <script>
+        var editor = new MediumEditor('.editable');
+
+    </script>
+      
+    
+
+  <script>
+      $(document).ready(function() {
+        $.ajax({
+          type: "GET",
+          url: "{% url 'api_post:answer-detail' pk_q pk_a %}",
+          processData: false,
+          contentType: "application/json",
+          data: '',
+          headers: {
+              'Authorization': token
+              },
+          success: function(r) {
+            $('#valure_replase').replaceWith(r.description);
+          },
+          error: function(r) {
+              // console.log("Something went wrong!");
+          }
+        });
+      })
+
+
+    $("#idForm").submit(function(e) {
+    
+    
+        var form = $(this);
+        var url = form.attr('action');
+        $.ajax({
+               type: "PATCH",
+               url: url,
+               data: form.serialize(), // serializes the form's elements.
+               headers: {
+                    'Authorization': token
+               },
+               success: function(data)
+               {
+                location.replace("{% url 'post:postdetail' pk_q %}");
+               },
+                error: function(data)
+                {
+                    // console.log(data);
+                }
+             });
+    
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+    });
+    </script>
+  
+  
+{% endblock content %}
